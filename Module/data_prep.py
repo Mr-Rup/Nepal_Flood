@@ -112,7 +112,6 @@ def get_temporal_composites(collection, aoi, bands=None, time_metadata=None):
         "counts": counts
     }
 
-
 def calculate_optical_indices(image):
     """
     Calculate NDVI, NDWI (McFeeters), and NDBI from a Sentinel-2 surface reflectance composite.
@@ -122,7 +121,6 @@ def calculate_optical_indices(image):
     ndwi = image.normalizedDifference(["B3", "B8"]).rename("NDWI")
     ndbi = image.normalizedDifference(["B11", "B8"]).rename("NDBI")
     return ee.Image.cat([ndvi, ndwi, ndbi])
-
 
 def export_geotiff(image, filename, aoi, scale=30):
     """Export an Earth Engine Image as a local GeoTIFF file via geemap."""
