@@ -6,3 +6,6 @@ pandas
 numpy
 matplotlib
 requests
+scikit-learn
+joblib
+seaborn
