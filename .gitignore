@@ -1,1 +1,75 @@
-.venv
+# =============================================================================
+# Python Environments & Dependencies
+# =============================================================================
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# =============================================================================
+# Python Bytecode, Caches & Distribution
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# =============================================================================
+# Jupyter Notebook Checkpoints & Cache
+# =============================================================================
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# =============================================================================
+# Geospatial, Remote Sensing Data & Large Tables
+# Keep Data/ directory structure via .gitkeep but ignore large rasters & CSVs
+# =============================================================================
+Data/*
+!Data/.gitkeep
+*.tif
+*.tiff
+*.geotiff
+*.vrt
+*.nc
+*.hdf
+*.h5
+*.zip
+*.tar.gz
+
+# =============================================================================
+# IDE, Editor & OS Artifacts
+# =============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# =============================================================================
+# Logs & Temporary Files
+# =============================================================================
+*.log
+scratch/
+tmp/
+temp/
