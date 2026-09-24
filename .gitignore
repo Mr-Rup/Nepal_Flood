@@ -38,14 +38,36 @@ wheels/
 */.ipynb_checkpoints/*
 
 # =============================================================================
-# Geospatial, Remote Sensing Data & Large Tables
-# Keep Data/ directory structure via .gitkeep but ignore large rasters & CSVs
+# Geospatial, Remote Sensing Data & Outputs
 # =============================================================================
-Data/*
-!Data/.gitkeep
-*.tif
-*.tiff
-*.geotiff
+# Keep Data subdirectories via .gitkeep
+!Data/**/.gitkeep
+
+# Ignore large raw satellite raster composites
+Data/rasters/raw/*.tif
+
+# Ignore intermediate uncompressed raw tabular dumps
+Data/tables/EO_feature_table_unlabeled.csv
+Data/tables/EO_feature_table_labelled.csv
+
+# Allow generated figures, maps, and dashboards
+!Data/figures/**
+!Data/figures/*.png
+!Data/figures/*.jpg
+
+# Allow model weights and metadata
+!Data/models/**
+
+# Allow verified spatial test predictions and ablation benchmarks
+!Data/tables/RF_spatial_test_predictions.csv
+!Data/tables/EO_feature_table_spatial_split.csv
+!Data/tables/ablation_results.csv
+
+# Allow generated GIS decision-support GeoTIFF products
+!Data/rasters/gis_products/**
+!Data/rasters/gis_products/*.tif
+
+# Generic archive/compressed formats
 *.vrt
 *.nc
 *.hdf

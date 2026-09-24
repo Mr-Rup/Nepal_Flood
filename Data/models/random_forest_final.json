@@ -1,0 +1,32 @@
+{
+  "model_type": "RandomForestClassifier",
+  "export_timestamp": "2026-09-24T01:29:10.155484",
+  "random_state": 42,
+  "block_size": 0.02,
+  "features": [
+    "VV_pre",
+    "VH_pre",
+    "VV_post",
+    "VH_post",
+    "dVV",
+    "dVH",
+    "NDVI_pre",
+    "NDWI_pre",
+    "NDBI_pre",
+    "NDVI_post",
+    "NDWI_post",
+    "NDBI_post",
+    "dNDVI",
+    "dNDWI",
+    "dNDBI",
+    "DEM",
+    "slope"
+  ],
+  "hyperparameters": {
+    "n_estimators": 300,
+    "min_samples_leaf": 2,
+    "class_weight": "balanced",
+    "random_state": 42,
+    "n_jobs": -1
+  }
+}
