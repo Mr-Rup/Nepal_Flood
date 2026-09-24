@@ -31,7 +31,7 @@ All data is accessed via **Google Earth Engine** and exported as local GeoTIFFs.
 
 ## Temporal Windows
 
-All temporal definitions are centralized in [`configs/time_metadata.json`](../configs/time_metadata.json):
+All temporal definitions are centralized in [`config.json → TIME_WINDOWS`](../config.json):
 
 | Window | Start | End | Purpose |
 |---|---|---|---|
@@ -48,7 +48,7 @@ Temporal composites are **median** aggregations clipped to the AOI, implemented 
 
 ### 17 Predictive Features
 
-All features are defined in [`configs/ml_config.json → FEATURE_GROUPS`](../configs/ml_config.json):
+All features are defined in [`config.json → FEATURE_GROUPS`](../config.json):
 
 #### Sentinel-1 SAR Features (6)
 
@@ -136,16 +136,16 @@ The feature table is assembled in [`Module/data_prep.py → build_feature_table(
 ---
 
 ## Output Files
-
+ 
 | File | Size | Description |
 |---|---|---|
-| `EO_feature_table_unlabeled.csv` | ~25 MB | 17 features + coordinates, no target |
-| `EO_feature_table_labelled.csv` | ~26 MB | With proxy target `Y` |
-| `EO_feature_table_spatial_split.csv` | ~29 MB | With spatial block IDs and split labels |
-| `RF_spatial_test_predictions.csv` | ~1.1 MB | GIS-ready: `longitude, latitude, Y, Y_pred, P_change` |
-| `ablation_results.csv` | <1 KB | Multi-sensor ablation metrics |
-| `random_forest_final.joblib` | ~90 MB | Serialized frozen RF model |
-| `random_forest_final.json` | <1 KB | Model metadata (features, hyperparameters, timestamp) |
+| [`Data/tables/EO_feature_table_unlabeled.csv`](../Data/tables/EO_feature_table_unlabeled.csv) | ~25 MB | 17 features + coordinates, no target |
+| [`Data/tables/EO_feature_table_labelled.csv`](../Data/tables/EO_feature_table_labelled.csv) | ~26 MB | With proxy target `Y` |
+| [`Data/tables/EO_feature_table_spatial_split.csv`](../Data/tables/EO_feature_table_spatial_split.csv) | ~29 MB | With spatial block IDs and split labels |
+| [`Data/tables/RF_spatial_test_predictions.csv`](../Data/tables/RF_spatial_test_predictions.csv) | ~1.1 MB | GIS-ready: `longitude, latitude, Y, Y_pred, P_change` |
+| [`Data/tables/ablation_results.csv`](../Data/tables/ablation_results.csv) | <1 KB | Multi-sensor ablation metrics |
+| [`Data/models/random_forest_final.joblib`](../Data/models/random_forest_final.joblib) | ~90 MB | Serialized frozen RF model |
+| [`Data/models/random_forest_final.json`](../Data/models/random_forest_final.json) | <1 KB | Model metadata (features, hyperparameters, timestamp) |
 
 ---
 

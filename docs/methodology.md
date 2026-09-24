@@ -56,7 +56,7 @@ Two models were compared using identical 4-Fold **Spatial GroupKFold Cross-Valid
 **Why Random Forest won:** Across all 4 spatial folds, Random Forest achieved F1 of **0.9479 ± 0.0048** vs. Logistic Regression's **0.4823 ± 0.0280**. The RF's low fold-to-fold variance (std = 0.0048 on F1) demonstrates consistent geographic generalization across different valley blocks.
 
 > [!NOTE]
-> All hyperparameters are centralized in [`configs/ml_config.json`](../configs/ml_config.json). No hyperparameter search was conducted — the configuration is fixed from the start.
+> All hyperparameters are centralized in [`config.json`](../config.json). No hyperparameter search was conducted — the configuration is fixed from the start.
 
 ---
 

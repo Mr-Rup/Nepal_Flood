@@ -75,7 +75,7 @@ The ablation study quantifies the contribution of each sensor modality by traini
 | S1 + S2 (Optical) | 15 | 0.9827 | 0.9352 | 0.9857 | 0.9598 | 0.9227 | 0.9990 |
 | **S1 + S2 + Terrain (Full)** | **17** | **0.9844** | **0.9411** | **0.9873** | **0.9637** | **0.9299** | **0.9991** |
 
-*Source: [`Data/ablation_results.csv`](../Data/ablation_results.csv)*
+*Source: [`Data/tables/ablation_results.csv`](../Data/tables/ablation_results.csv)*
 
 ### What the Ablation Tells Us
 
@@ -114,13 +114,13 @@ Random Forest feature importance (Gini importance from the final frozen model) w
 
 | Element | How It's Fixed |
 |---|---|
-| Random state | `RANDOM_STATE = 42` in [`configs/ml_config.json`](../configs/ml_config.json), passed to all splitters and models |
-| Temporal windows | Fixed in [`configs/time_metadata.json`](../configs/time_metadata.json) |
-| Feature definitions | Fixed in [`configs/ml_config.json → FEATURE_GROUPS`](../configs/ml_config.json) |
+| Random state | `RANDOM_STATE = 42` in [`config.json`](../config.json), passed to all splitters and models |
+| Temporal windows | Fixed in [`config.json → TIME_WINDOWS`](../config.json) |
+| Feature definitions | Fixed in [`config.json → FEATURE_GROUPS`](../config.json) |
 | Block size | `DEFAULT_BLOCK_SIZE = 0.02` in config |
 | Split ratios | `DEV_SIZE = 0.80`, `TEST_SIZE = 0.20`, `TRAIN_SIZE = 0.75`, `VAL_SIZE = 0.25` in config |
 | Model hyperparameters | Fixed in config; no search or tuning performed |
-| Serialized model | [`Data/random_forest_final.joblib`](../Data/random_forest_final.joblib) with metadata in [`.json`](../Data/random_forest_final.json) |
+| Serialized model | [`Data/models/random_forest_final.joblib`](../Data/models/random_forest_final.joblib) with metadata in [`.json`](../Data/models/random_forest_final.json) |
 
 ---
 

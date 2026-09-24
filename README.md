@@ -32,7 +32,7 @@ graph LR
     D --> E["Spatial Block Partitioning<br/>GroupShuffleSplit (0.02° blocks)"]
     E --> F["Model Selection<br/>Logistic Reg. vs Random Forest<br/>4-Fold Spatial GroupKFold CV"]
     F --> G["Frozen RF Model<br/>One-shot spatial test evaluation"]
-    G --> H["GIS-Ready Predictions<br/>CSV export"]
+    G --> H["GIS Integration & Decision Support<br/>GeoTIFFs · Triage Surfaces · Error Maps"]
 ```
 
 ---
@@ -60,8 +60,26 @@ graph LR
 | S1 + S2 (Optical) | 15 | 0.9827 | 0.9352 | 0.9857 | 0.9598 | 0.9227 | 0.9990 |
 | **S1 + S2 + Terrain (Full)** | **17** | **0.9844** | **0.9411** | **0.9873** | **0.9637** | **0.9299** | **0.9991** |
 
-> [!NOTE]
-> All metrics above are taken directly from notebook outputs in [`02_EO_Spatial_ML_Change_Detection.ipynb`](Notebooks/02_EO_Spatial_ML_Change_Detection.ipynb) and [`Data/ablation_results.csv`](Data/ablation_results.csv).
+*Source: [`Data/tables/ablation_results.csv`](Data/tables/ablation_results.csv)*
+
+---
+
+## Visual Decision-Support Products
+
+Stage 3 translates the validated spatial model into publication-grade, decision-maker-focused geospatial outputs. All 5 maps are synthesized into an integrated comparative dashboard:
+
+![Nepal Flood 5-Panel GIS Dashboard](Data/figures/nepal_flood_gis_dashboard_5panel.png)
+
+| Map | Layer | Key Decision-Support Insight |
+|---|---|---|
+| **Map 1** | **EO Change Intensity** | Continuous multi-sensor composite $[0, 1]$ showing severe physical disturbance corridors along valley bottoms. |
+| **Map 2** | **Reference Change Mask** | Upper 20th-percentile anomaly proxy mask used as target $Y$ for spatial machine learning. |
+| **Map 3** | **RF Predicted Change** | Basin-wide binary prediction $\hat{Y} \in \{0, 1\}$ identifying contiguous affected zones without checkerboard noise. |
+| **Map 4** | **Probability Triage** | Continuous probability surface $P_{\text{change}} \in [0, 1]$ partitioned into 4 operational response tiers (Low, Watch, High, Emergency). |
+| **Map 5** | **Spatial Test Error Surface** | Categorical agreement surface ($\text{TN}, \text{FP}, \text{FN}, \text{TP}$) on held-out spatial blocks proving $98.4\%$ spatial generalization. |
+
+> [!TIP]
+> High-resolution individual maps and full operational response protocols are documented in [`docs/gis-and-decision-support.md`](docs/gis-and-decision-support.md).
 
 ---
 
@@ -99,8 +117,12 @@ pip install -r requirements.txt
    Open and run [`Notebooks/02_EO_Spatial_ML_Change_Detection.ipynb`](Notebooks/02_EO_Spatial_ML_Change_Detection.ipynb).
    This performs spatial block partitioning, cross-validation, model comparison, ablation, and exports predictions.
 
+3. **Stage 3 — GIS Change Mapping & Decision Support**:
+   Open and run [`Notebooks/03_GIS_Change_Mapping.ipynb`](Notebooks/03_GIS_Change_Mapping.ipynb).
+   This generates all 5 publication-ready maps, continuous triage probability surfaces, spatial error classification rasters, and 7 GeoTIFF exports.
+
 > [!TIP]
-> If you already have the `Data/` files (GeoTIFFs, CSVs), you can skip Notebook 01 entirely and jump straight to Notebook 02.
+> If you already have the `Data/` files (GeoTIFFs, CSVs), you can skip Notebook 01 entirely and jump straight to Notebook 02 or 03.
 
 ---
 
@@ -109,39 +131,36 @@ pip install -r requirements.txt
 ```
 Nepal_Flood/
 ├── Notebooks/
-│   ├── 01_Data_Setup.ipynb                    # EO extraction, alignment, feature table, proxy labeling
-│   └── 02_EO_Spatial_ML_Change_Detection.ipynb # Spatial ML: CV, model selection, ablation, export
+│   ├── 01_Data_Setup.ipynb                     # EO extraction, alignment, feature table, proxy labeling
+│   ├── 02_EO_Spatial_ML_Change_Detection.ipynb  # Spatial ML: CV, model selection, ablation, export
+│   └── 03_GIS_Change_Mapping.ipynb             # GIS mapping: 5 maps, triage surfaces, error rasters
 │
 ├── Module/
-│   ├── __init__.py                            # Package init
-│   ├── data_prep.py                           # Earth Engine utilities, raster alignment, feature table builder, proxy labeling
-│   └── spatial_ml.py                          # Spatial blocks, GroupShuffleSplit, leakage checks, CV, ablation, export
+│   ├── __init__.py                             # Package init
+│   ├── data_prep.py                            # Earth Engine utilities, raster alignment, feature table builder
+│   ├── spatial_ml.py                           # Spatial blocks, GroupShuffleSplit, CV, ablation, export
+│   └── gis_mapping.py                          # Multi-sensor intensity, coordinate rasterization, error mapping
 │
-├── configs/
-│   ├── ml_config.json                         # Central hyperparameters, feature groups, split ratios, paths
-│   └── time_metadata.json                     # Temporal windows: baseline, pre, post, recovery
+├── config.json                                 # Centralized configuration (metadata, features, paths, models)
 │
-├── Data/                                      # Generated artifacts (gitignored except .gitkeep)
-│   ├── S1_pre.tif, S1_post.tif, S1_2025_baseline.tif   # Sentinel-1 SAR composites
-│   ├── S2_indices_change.tif                            # 9-band Sentinel-2 indices
-│   ├── DEM.tif                                          # SRTM 30m DEM
-│   ├── EO_feature_table_unlabeled.csv                   # Raw 17-feature matrix
-│   ├── EO_feature_table_labelled.csv                    # With proxy target Y (123,154 rows)
-│   ├── EO_feature_table_spatial_split.csv               # With spatial block + split labels
-│   ├── ablation_results.csv                             # Multi-sensor ablation metrics
-│   ├── RF_spatial_test_predictions.csv                  # GIS-ready test predictions
-│   ├── random_forest_final.joblib                       # Serialized frozen RF model (~90 MB)
-│   └── random_forest_final.json                         # Model metadata
+├── Data/
+│   ├── rasters/
+│   │   ├── raw/                               # Raw satellite GeoTIFFs (S1_pre, S1_post, S2_indices, DEM)
+│   │   └── gis_products/                      # Decision-support GeoTIFF products (intensity, prob, error rasters)
+│   ├── tables/                                # Tabular data (raw features, labelled, spatial splits, predictions)
+│   ├── models/                                # Serialized frozen RF model (.joblib) & metadata (.json)
+│   └── figures/                               # High-resolution publication maps & 5-panel dashboard (PNG)
 │
 ├── docs/
-│   ├── methodology.md                         # Problem formulation, labeling strategy, spatial CV design
-│   ├── data-and-features.md                   # Data provenance, feature engineering details
-│   └── results.md                             # Full metric tables, ablation, and failure modes
+│   ├── methodology.md                          # Problem formulation, labeling strategy, spatial CV design
+│   ├── data-and-features.md                    # Data provenance, feature engineering details
+│   ├── results.md                              # Full metric tables, ablation, and failure modes
+│   └── gis-and-decision-support.md             # 5 maps interpretation, operational triage matrix, error analysis
 │
-├── requirements.txt                           # Python dependencies
-├── LICENSE                                    # MIT License
-├── .gitignore                                 # Ignores Data/, .venv/, caches
-└── README.md                                  # ← You are here
+├── requirements.txt                            # Python dependencies
+├── LICENSE                                     # MIT License
+├── .gitignore                                  # Selective tracking: models, figures, tables, products tracked
+└── README.md                                   # ← You are here
 ```
 
 ---
@@ -153,6 +172,7 @@ Nepal_Flood/
 | [`docs/methodology.md`](docs/methodology.md) | Problem formulation, why Random Forest over Logistic Regression, spatial CV design, proxy labeling rationale, cost-of-error analysis |
 | [`docs/data-and-features.md`](docs/data-and-features.md) | Data provenance (Sentinel-1/2, SRTM), temporal windows, feature engineering, spatial alignment, missing-value handling |
 | [`docs/results.md`](docs/results.md) | Full metric tables (CV + test), multi-sensor ablation, confusion matrix analysis, feature importance, failure modes |
+| [`docs/gis-and-decision-support.md`](docs/gis-and-decision-support.md) | Detailed interpretation of the 5 maps, operational triage framework (confidence bands to emergency actions), spatial error diagnostics, and raster catalog |
 
 ---
 
