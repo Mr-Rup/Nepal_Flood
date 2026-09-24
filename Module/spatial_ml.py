@@ -17,8 +17,7 @@ from sklearn.metrics import (
     recall_score,
     f1_score,
     jaccard_score,
-    roc_auc_score,
-    confusion_matrix
+    roc_auc_score
 )
 
 # ---------------------------------------------------------------------------
@@ -26,12 +25,12 @@ from sklearn.metrics import (
 # ---------------------------------------------------------------------------
 MODULE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = MODULE_DIR.parent
-CONFIGS_DIR = PROJECT_ROOT / "configs"
+CONFIG_PATH = PROJECT_ROOT / "config.json"
 
 def load_ml_config(json_path=None):
-    """Load machine learning configuration from configs/ml_config.json."""
+    """Load machine learning and project configuration from root config.json."""
     if json_path is None:
-        json_path = CONFIGS_DIR / "ml_config.json"
+        json_path = CONFIG_PATH
     json_path = Path(json_path)
 
     if json_path.exists():
@@ -50,13 +49,15 @@ def load_ml_config(json_path=None):
         "LOGISTIC_REGRESSION": {"max_iter": 1000, "random_state": 42, "class_weight": "balanced"},
         "RANDOM_FOREST": {"n_estimators": 300, "min_samples_leaf": 2, "class_weight": "balanced", "random_state": 42, "n_jobs": -1},
         "PATHS": {
-            "INPUT_FILE": "Data/EO_feature_table_labelled.csv",
-            "SPATIAL_SPLIT_FILE": "Data/EO_feature_table_spatial_split.csv",
-            "PREDICTION_FILE": "Data/RF_spatial_test_predictions.csv",
-            "MODEL_FILE": "Data/random_forest_final.joblib",
-            "ABLATION_FILE": "Data/ablation_results.csv"
+            "INPUT_FILE": "Data/tables/EO_feature_table_labelled.csv",
+            "SPATIAL_SPLIT_FILE": "Data/tables/EO_feature_table_spatial_split.csv",
+            "PREDICTION_FILE": "Data/tables/RF_spatial_test_predictions.csv",
+            "MODEL_FILE": "Data/models/random_forest_final.joblib",
+            "ABLATION_FILE": "Data/tables/ablation_results.csv"
         }
     }
+
+load_config = load_ml_config
 
 def construct_spatial_blocks(df, block_size=0.02, lon_col="longitude", lat_col="latitude"):
     """
@@ -411,6 +412,8 @@ def validate_and_export_predictions(test_df, y_pred, y_prob, output_path,
     assert set(preds_df["Y_pred"].unique()).issubset({0, 1}), f"Invalid Y_pred values: {preds_df['Y_pred'].unique()}"
     assert (preds_df["P_change"] >= 0.0).all() and (preds_df["P_change"] <= 1.0).all(), "P_change outside [0, 1] range"
     
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     preds_df.to_csv(output_path, index=False)
     print(f"Predictions successfully validated and exported to: {output_path}")
     print(f"Exported row count: {len(preds_df):,}")

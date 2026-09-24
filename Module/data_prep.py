@@ -8,32 +8,40 @@ from rasterio.warp import reproject, Resampling, calculate_default_transform
 # ---------------------------------------------------------------------------
 MODULE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = MODULE_DIR.parent
+CONFIG_PATH = PROJECT_ROOT / "config.json"
 DATA_DIR = PROJECT_ROOT / "Data"
-CONFIGS_DIR = PROJECT_ROOT / "configs"
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # Default AOI: Bhote Koshi - Trishuli region
 DEFAULT_AOI_COORDS = [84.70, 28.00, 85.00, 28.25]
 
-def load_time_metadata(json_path=None):
-    """Load time window definitions from configs/time_metadata.json."""
-    if json_path is None:
-        json_path = CONFIGS_DIR / "time_metadata.json"
-    json_path = Path(json_path)
-
-    if json_path.exists():
-        with open(json_path, "r", encoding="utf-8") as f:
+def load_project_config(config_path=None):
+    """Load centralized project configuration from root config.json."""
+    if config_path is None:
+        config_path = CONFIG_PATH
+    config_path = Path(config_path)
+    if config_path.exists():
+        with open(config_path, "r", encoding="utf-8") as f:
             return json.load(f)
+    return {}
+
+load_config = load_project_config
+
+def load_time_metadata(json_path=None):
+    """Load time window definitions from root config.json."""
+    cfg = load_project_config(json_path)
+    if "TIME_WINDOWS" in cfg:
+        return cfg["TIME_WINDOWS"]
     return {
-        "BASELINE_START": "2025-08-01",
-        "BASELINE_END": "2025-08-31",
-        "PRE_START": "2026-08-01",
-        "PRE_END": "2026-08-25",
-        "POST_START": "2026-08-27",
-        "POST_END": "2026-09-05",
-        "RECOVERY_START": "2026-09-06",
-        "RECOVERY_END": "2026-09-30"
+        "BASELINE_START": cfg.get("BASELINE_START", "2025-08-01"),
+        "BASELINE_END": cfg.get("BASELINE_END", "2025-08-31"),
+        "PRE_START": cfg.get("PRE_START", "2026-08-01"),
+        "PRE_END": cfg.get("PRE_END", "2026-08-25"),
+        "POST_START": cfg.get("POST_START", "2026-08-27"),
+        "POST_END": cfg.get("POST_END", "2026-09-05"),
+        "RECOVERY_START": cfg.get("RECOVERY_START", "2026-09-06"),
+        "RECOVERY_END": cfg.get("RECOVERY_END", "2026-09-30")
     }
 
 # ---------------------------------------------------------------------------
