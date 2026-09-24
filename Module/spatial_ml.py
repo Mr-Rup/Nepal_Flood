@@ -426,8 +426,8 @@ def export_model_with_metadata(model, model_path, features_list, rf_params, bloc
     model_path = Path(model_path)
     model_path.parent.mkdir(parents=True, exist_ok=True)
     
-    joblib.dump(model, model_path)
-    print(f"Model saved to: {model_path}")
+    joblib.dump(model, model_path, compress=3)
+    print(f"Model saved to: {model_path} (compressed)")
     
     metadata = {
         "model_type": type(model).__name__,
