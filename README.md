@@ -1,11 +1,13 @@
-# 🌊 Nepal Flood — EO-Based Landscape Change Detection
+# 🌊 Nepal Flood: EO-Based Landscape Change Detection
 
 ![Python 3.11](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-classification-orange?logo=scikit-learn&logoColor=white)
 ![Google Earth Engine](https://img.shields.io/badge/Google%20Earth%20Engine-EO%20Pipeline-green?logo=google-earth&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow)
 
-Multi-sensor Earth Observation pipeline and spatial machine learning model for detecting flood and landslide impacts in Nepal's **Bhote Koshi – Trishuli river basin**, using Sentinel-1 SAR, Sentinel-2 optical imagery, and SRTM topographic data — evaluated under strict **spatial block cross-validation** to prevent autocorrelation leakage.
+A collaborative project developed for SPARK 4.0, exploring spatial machine learning for EO-based landscape change detection using multi-temporal Sentinel-1, Sentinel-2, and terrain features.
+
+Multi-sensor Earth Observation pipeline and spatial machine learning model for detecting flood and landslide impacts in Nepal's **Bhote Koshi – Trishuli river basin**, using Sentinel-1 SAR, Sentinel-2 optical imagery, and SRTM topographic data, evaluated under strict **spatial block cross-validation** to prevent autocorrelation leakage.
 
 ---
 
@@ -16,7 +18,7 @@ In late August 2026, extreme monsoon flooding devastated central Nepal. Emergenc
 1. Ingests multi-temporal Sentinel-1 SAR and Sentinel-2 optical composites (pre-flood, post-flood, baseline, and recovery windows) via **Google Earth Engine**.
 2. Derives 17 remote sensing features (radar backscatter, spectral indices, terrain attributes) and aligns them to a common 30 m reference grid.
 3. Generates proxy ground-truth labels via multi-modal standardized anomaly scoring (top 20% composite change score → `Y = 1`).
-4. Trains and evaluates a **Random Forest** classifier under spatially rigorous block-based partitioning — ensuring the model is tested on geographic regions it has never seen during training.
+4. Trains and evaluates a **Random Forest** classifier under spatially rigorous block-based partitioning by ensuring the model is tested on geographic regions it has never seen during training.
 
 The resulting prediction CSV (`longitude`, `latitude`, `Y_pred`, `P_change`) is formatted for direct GIS handoff and downstream mapping.
 
@@ -152,6 +154,7 @@ Nepal_Flood/
 │   └── figures/                               # High-resolution publication maps & 5-panel dashboard (PNG)
 │
 ├── docs/
+│   ├── SPARK4_Solution_Final_PPT_CHARTS.pdf    # Representation of the work
 │   ├── methodology.md                          # Problem formulation, labeling strategy, spatial CV design
 │   ├── data-and-features.md                    # Data provenance, feature engineering details
 │   ├── results.md                              # Full metric tables, ablation, and failure modes
@@ -173,6 +176,7 @@ Nepal_Flood/
 | [`docs/data-and-features.md`](docs/data-and-features.md) | Data provenance (Sentinel-1/2, SRTM), temporal windows, feature engineering, spatial alignment, missing-value handling |
 | [`docs/results.md`](docs/results.md) | Full metric tables (CV + test), multi-sensor ablation, confusion matrix analysis, feature importance, failure modes |
 | [`docs/gis-and-decision-support.md`](docs/gis-and-decision-support.md) | Detailed interpretation of the 5 maps, operational triage framework (confidence bands to emergency actions), spatial error diagnostics, and raster catalog |
+| [`docs/SPARK4_Solution_Final_PPT_CHARTS.pdf`](docs/SPARK4_Solution_Final_PPT_CHARTS.pdf) | Representation of the whole work |
 
 ---
 
@@ -197,10 +201,9 @@ Nepal_Flood/
 If you use this work, please cite:
 
 ```
-Majumdar, B. & Das, A. (2026). Nepal Flood — EO-Based Landscape Change Detection.
-GitHub: https://github.com/Mr-Rup/Nepal_Flood
+Majumdar, B. & Das, A. (2026). Nepal Flood: EO-Based Landscape Change Detection.
+GitHub: https://github.com/Mr-Rup/Nepal-Flood-Spatial-ML
 ```
-
 ---
 
 ## Contact
